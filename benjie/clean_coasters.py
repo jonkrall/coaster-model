@@ -10,6 +10,8 @@ import sys
 import numpy as np
 import pandas as pd
 
+from pathlib import Path
+
 STAR_COLS = [f"rating_{s}_stars" for s in
              ["0_5", "1_0", "1_5", "2_0", "2_5", "3_0", "3_5", "4_0", "4_5", "5_0"]]
 STAR_VALUES = np.arange(0.5, 5.01, 0.5)
@@ -85,7 +87,8 @@ def load_clean(db_path, min_ratings=20, rare_min=15):
 
 
 if __name__ == "__main__":
-    out = load_clean(sys.argv[1])
+    db_path = sys.argv[1] if len(sys.argv) > 1 else Path(__file__).resolve().parent.parent / "data" / "coaster_database.db"
+    out = load_clean(db_path)
     out.to_csv("coasters_clean.csv", index=False)
     print(out.shape)
     print(out.isna().sum()[out.isna().sum() > 0])
